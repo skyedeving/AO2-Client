@@ -578,6 +578,7 @@ private:
   AOButton *ui_switch_area_music;
 
   QCheckBox *ui_pre;
+  QCheckBox *ui_sfx;
   QCheckBox *ui_flip;
   QCheckBox *ui_additive;
   QCheckBox *ui_guard;

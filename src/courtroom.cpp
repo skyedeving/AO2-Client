@@ -185,6 +185,9 @@ Courtroom::Courtroom(AOApplication *p_ao_app) : QMainWindow()
   ui_pre = new QCheckBox(this);
   ui_pre->setText(tr("Pre"));
 
+  ui_sfx = new QCheckBox(this);
+  ui_sfx->setText(tr("Sfx"));
+
   ui_flip = new QCheckBox(this);
   ui_flip->setText(tr("Flip"));
   ui_flip->hide();
@@ -823,6 +826,10 @@ void Courtroom::set_widgets()
   ui_pre->setText(tr("Preanim"));
   ui_pre->setToolTip(
       tr("Play a single-shot animation as defined by the emote when checked."));
+
+  set_size_and_pos(ui_sfx, "sfx");
+  ui_sfx->setText(tr("Sfx"));
+  ui_sfx->setToolTip(tr("When checked, sound effects will be played."));
 
   set_size_and_pos(ui_pre_non_interrupt, "pre_no_interrupt");
   ui_pre_non_interrupt->setToolTip(
@@ -1574,8 +1581,10 @@ void Courtroom::on_chat_return_pressed()
   }
 
   packet_contents.append(f_desk_mod);
-
-  packet_contents.append(ao_app->get_pre_emote(current_char, current_emote));
+  if (ui_pre->isChecked())
+    packet_contents.append(ao_app->get_pre_emote(current_char, current_emote));
+  else
+    packet_contents.append("");
 
   packet_contents.append(current_char);
 
@@ -1584,8 +1593,10 @@ void Courtroom::on_chat_return_pressed()
   packet_contents.append(ui_ic_chat_message->text());
 
   packet_contents.append(current_side);
-
-  packet_contents.append(get_char_sfx());
+  if (ui_sfx->isChecked())
+    packet_contents.append(get_char_sfx());
+  else
+    packet_contents.append("");
   if (ui_pre->isChecked() && !ao_app->is_stickysounds_enabled()) {
     ui_sfx_dropdown->blockSignals(true);
     ui_sfx_dropdown->setCurrentIndex(0);
@@ -1597,14 +1608,14 @@ void Courtroom::on_chat_return_pressed()
 
   // needed or else legacy won't understand what we're saying
   if (objection_state > 0) {
-    if (ui_pre->isChecked()) {
+    if (ui_pre->isChecked() || ui_sfx->isChecked()) {
       if (f_emote_mod == 4 || f_emote_mod == 5)
         f_emote_mod = 6;
       else
         f_emote_mod = 2;
     }
   }
-  else if (ui_pre->isChecked() && !ui_pre_non_interrupt->isChecked()) {
+  else if ((ui_pre->isChecked() && !ui_pre_non_interrupt->isChecked()) || (ui_sfx->isChecked() && !ui_pre_non_interrupt->isChecked())) {
     if (f_emote_mod == 0)
       f_emote_mod = 1;
     else if (f_emote_mod == 5 && ao_app->prezoom_enabled)
