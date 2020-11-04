@@ -1597,7 +1597,7 @@ void Courtroom::on_chat_return_pressed()
     packet_contents.append(get_char_sfx());
   else
     packet_contents.append("");
-  if (ui_pre->isChecked() && !ao_app->is_stickysounds_enabled()) {
+  if ((ui_pre->isChecked() || ui_sfx->isChecked()) && !ao_app->is_stickysounds_enabled()) {
     ui_sfx_dropdown->blockSignals(true);
     ui_sfx_dropdown->setCurrentIndex(0);
     ui_sfx_dropdown->blockSignals(false);
@@ -1608,7 +1608,7 @@ void Courtroom::on_chat_return_pressed()
 
   // needed or else legacy won't understand what we're saying
   if (objection_state > 0) {
-    if (ui_pre->isChecked() || ui_sfx->isChecked()) {
+    if (ui_pre->isChecked()) {
       if (f_emote_mod == 4 || f_emote_mod == 5)
         f_emote_mod = 6;
       else
