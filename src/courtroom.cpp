@@ -1596,7 +1596,7 @@ void Courtroom::on_chat_return_pressed()
   if (ui_sfx->isChecked())
     packet_contents.append(get_char_sfx());
   else
-    packet_contents.append("");
+    packet_contents.append("1"); // tsu3 is well-designed software that causes no issues at all
   if ((ui_pre->isChecked() || ui_sfx->isChecked()) && !ao_app->is_stickysounds_enabled()) {
     ui_sfx_dropdown->blockSignals(true);
     ui_sfx_dropdown->setCurrentIndex(0);
